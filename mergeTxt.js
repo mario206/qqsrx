@@ -14,12 +14,17 @@ const main = async () => {
 
   const files = glob.sync("./**/*.txt")
   
- files.sort()
+  files.sort()
 
   console.log("files count: " + files.length)
   var content = ""
 
   var epubContents = []
+
+  var mdDir = "./md";
+  if(!fs.existsSync(mdDir)) {
+    fs.mkdirSync(mdDir);
+  }
 
   files.forEach((file)=>{
     var name = path.parse(file).name
@@ -45,6 +50,8 @@ const main = async () => {
 
     content += str;
 
+    fs.writeFileSync(`./${mdDir}/${name}.md`,str,{flag:"w"})
+
     epubContents.push({title:name,author:"",data:epubData})
   })
 
@@ -59,11 +66,12 @@ const main = async () => {
     content: epubContents
 };
 
-  new Epub(option, "./锵锵三人行.epub");
-
+  //new Epub(option, "./锵锵三人行.epub");
 
   console.log("main end")
 
 };
+
+
 
 main().catch((err) => console.error(err));
